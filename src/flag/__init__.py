@@ -3,16 +3,16 @@ A module used for automatically parsing command line flag arguments.
 '''
 
 from abc import ABC
-from typing import Any, Dict, SupportsFloat, SupportsInt, TypeVar, Type
+from typing import Any, Dict, Generic, SupportsFloat, SupportsInt, TypeVar, Type
 import re
 import sys
 import os
 
 __all__ = ['IntFlag', 'StrFlag', 'BoolFlag', 'FloatFlag', 'parse', 'print_defaults']
 
-FlagType = TypeVar('FlagType', str, int, bool, float)
+FlagType = TypeVar('FlagType', str, bool, float, int, bool)
 
-class _Flag(ABC):
+class _Flag(ABC, Generic[FlagType]):
     @classmethod
     def _check_against(cls, value: FlagType, _type: Type):
         if not isinstance(value, _type):
@@ -103,25 +103,40 @@ class IntFlag(_Flag, SupportsInt):
         self.mandatory=mandatory
 
     def __int__(self) -> int:
-        return self.value
+        return int(self.value)
 
-    def __eq__(self, o: SupportsInt) -> bool:
-        return self.value == int(o)
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, SupportsInt):
+            raise TypeError('Argument must support int conversion (SupportsInt).')
 
-    def __ne__(self, o: SupportsInt) -> bool:
-        return self.value != int(o)
+        return int(self.value) == int(o)
 
-    def __lt__(self, o: SupportsInt) -> bool:
-        return self.value < int(o)
+    def __ne__(self, o: object) -> bool:
+        return not self.__eq__(o)
 
-    def __le__(self, o: SupportsInt) -> bool:
-        return self.value <= int(o)
+    def __lt__(self, o: object) -> bool:
+        if not isinstance(o, SupportsInt):
+            raise TypeError('Argument must support int conversion (SupportsInt).')
 
-    def __gt__(self, o: SupportsInt) -> bool:
-        return self.value > int(o)
+        return int(self.value) < int(o)
 
-    def __ge__(self, o: SupportsInt) -> bool:
-        return self.value >= int(o)
+    def __le__(self, o: object) -> bool:
+        if not isinstance(o, SupportsInt):
+            raise TypeError('Argument must support int conversion (SupportsInt).')
+
+        return int(self.value) <= int(o)
+
+    def __gt__(self, o: object) -> bool:
+        if not isinstance(o, SupportsInt):
+            raise TypeError('Argument must support int conversion (SupportsInt).')
+
+        return int(self.value) > int(o)
+
+    def __ge__(self, o: object) -> bool:
+        if not isinstance(o, SupportsInt):
+            raise TypeError('Argument must support int conversion (SupportsInt).')
+
+        return int(self.value) >= int(o)
 
 class FloatFlag(_Flag, SupportsFloat):
     '''
@@ -133,25 +148,43 @@ class FloatFlag(_Flag, SupportsFloat):
         self.mandatory = mandatory
 
     def __float__(self) -> float:
-        return self.value
+        return float(self.value)
 
-    def __eq__(self, o: SupportsFloat) -> bool:
-        return self.value == float(o)
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, SupportsFloat):
+            raise TypeError('Argument must support float conversion (SupportsFloat).')
 
-    def __ne__(self, o: SupportsFloat) -> bool:
-        return self.value != float(o)
+        return float(self.value) == float(o)
 
-    def __lt__(self, o: SupportsFloat) -> bool:
-        return self.value < float(o)
+    def __ne__(self, o: object) -> bool:
+        if not isinstance(o, SupportsFloat):
+            raise TypeError('Argument must support float conversion (SupportsFloat).')
 
-    def __le__(self, o: SupportsFloat) -> bool:
-        return self.value <= float(o)
+        return not self.__eq__(o)
 
-    def __gt__(self, o: SupportsFloat) -> bool:
-        return self.value > float(o)
+    def __lt__(self, o: object) -> bool:
+        if not isinstance(o, SupportsFloat):
+            raise TypeError('Argument must support float conversion (SupportsFloat).')
 
-    def __ge__(self, o: SupportsFloat) -> bool:
-        return self.value >= float(o)
+        return float(self.value) < float(o)
+
+    def __le__(self, o: object) -> bool:
+        if not isinstance(o, SupportsFloat):
+            raise TypeError('Argument must support float conversion (SupportsFloat).')
+
+        return float(self.value) <= float(o)
+
+    def __gt__(self, o: object) -> bool:
+        if not isinstance(o, SupportsFloat):
+            raise TypeError('Argument must support float conversion (SupportsFloat).')
+
+        return float(self.value) > float(o)
+
+    def __ge__(self, o: object) -> bool:
+        if not isinstance(o, SupportsFloat):
+            raise TypeError('Argument must support float conversion (SupportsFloat).')
+
+        return float(self.value) >= float(o)
 
 class StrFlag(_Flag):
     '''
@@ -163,10 +196,10 @@ class StrFlag(_Flag):
         self.mandatory = mandatory
 
     def __eq__(self, o: object) -> bool:
-        return self.value == str(o)
+        return str(self.value) == str(o)
 
     def __ne__(self, o: object) -> bool:
-        return self.value != str(o)
+        return str(self.value) != str(o)
 
 class BoolFlag(_Flag):
     '''
@@ -224,7 +257,7 @@ def parse() -> None:
     while len(argv) != 0:
         arg = argv.pop(0)
         real_name = ''
-        value = None
+        value: Any = None
 
         if '=' in arg:
             # support -name=value style flags
