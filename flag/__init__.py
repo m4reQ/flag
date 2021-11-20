@@ -29,13 +29,13 @@ class _Flag(ABC):
 
         return matches[0].replace("'", '')
 
-    def __init__(self, name: str, default: FlagType, flag_type: Type, desc: str, mandatory: bool):
+    def __init__(self, name: str, default: FlagType, flag_type: Type, desc: str):
         _Flag._check_against(default, flag_type)
 
         self.name: str = name
         self.default: FlagType = default
         self.desc: str = desc
-        self.mandatory: bool = mandatory
+        self.mandatory: bool = False
         self.type: Type = flag_type
         self.arg_name: str = _Flag._get_arg_name(self.desc)
         self._value: FlagType = self.default
@@ -99,7 +99,8 @@ class IntFlag(_Flag, SupportsInt):
     '''
 
     def __init__(self, name: str, default: int, desc: str, *, mandatory: bool=False):
-        super().__init__(name, default, int, desc, mandatory)
+        super().__init__(name, default, int, desc)
+        self.mandatory=mandatory
 
     def __int__(self) -> int:
         return self.value
@@ -128,7 +129,8 @@ class FloatFlag(_Flag, SupportsFloat):
     '''
 
     def __init__(self, name: str, default: float, desc: str, *, mandatory: bool=False):
-        super().__init__(name, default, float, desc, mandatory)
+        super().__init__(name, default, float, desc)
+        self.mandatory = mandatory
 
     def __float__(self) -> float:
         return self.value
@@ -157,7 +159,8 @@ class StrFlag(_Flag):
     '''
 
     def __init__(self, name: str, default: str, desc: str, *, mandatory: bool=False):
-        super().__init__(name, default, str, desc, mandatory)
+        super().__init__(name, default, str, desc)
+        self.mandatory = mandatory
 
     def __eq__(self, o: object) -> bool:
         return self.value == str(o)
@@ -171,7 +174,7 @@ class BoolFlag(_Flag):
     '''
 
     def __init__(self, name: str, desc: str):
-        super().__init__(name, False, bool, desc, False)
+        super().__init__(name, False, bool, desc)
 
     def __eq__(self, o: object) -> bool:
         return self.value == bool(o)
