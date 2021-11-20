@@ -23,9 +23,9 @@ jobs:
     - name: Analyse the code with pylint
       run: |
         pylint ./src
-    - name: Analyse the code with MyPy
+    - name: Analyse the code with mypy
       run: |
         mypy ./src
     - name: Build source code
       run: |
-        build
+        python -m build
