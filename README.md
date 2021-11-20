@@ -1,3 +1,4 @@
+[![CI](https://github.com/m4reQ/flag/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/m4reQ/flag/actions/workflows/main.yml)
 # PyFlag
 
 PyFlag is a Python library that helps with dealing with

@@ -19,9 +19,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install pylint
         pip install build
-    - name: Analysing the code with pylint
+        pip install mypy
+    - name: Analyse the code with pylint
       run: |
         pylint ./src
+    - name: Analyse the code with mypy
+      run: |
+        mypy ./src
     - name: Build source code
       run: |
         python -m build
