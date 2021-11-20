@@ -21,7 +21,7 @@ jobs:
         pip install build
     - name: Analysing the code with pylint
       run: |
-        pylint ./flag/__init__.py
+        pylint ./src
     - name: Build source code
       run: |
         python -m build
