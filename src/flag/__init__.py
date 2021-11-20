@@ -3,7 +3,7 @@ A module used for automatically parsing command line flag arguments.
 '''
 
 from abc import ABC
-from typing import Any, Dict, Generic, SupportsFloat, SupportsInt, TypeVar, Type
+from typing import Any, Dict, Generic, List, SupportsFloat, SupportsInt, TypeVar, Type
 import re
 import sys
 import os
@@ -232,23 +232,11 @@ def _register_flag(flag: _Flag) -> None:
     if flag.mandatory:
         _unsatisfied_mandatory[flag.name] = flag
 
-def print_defaults() -> None:
-    '''
-    Prints all flags usage informations.
-    '''
-
-    print(f'Usage of {os.path.basename(sys.argv[0])}:')
-
-    for flag in _flags_registered.values():
-        flag.description()
-
-def parse() -> None:
+def _parse(argv: List[str]) -> None:
     '''
     Parses given command line arguments and puts values
     into corresponding flags.
     '''
-
-    argv = sys.argv.copy()
 
     argv.pop(0)
 
@@ -296,3 +284,16 @@ def parse() -> None:
     if len(_unsatisfied_mandatory) != 0:
         unsatisfied = list(_unsatisfied_mandatory.values())
         _write_exc(f'Mandatory flag "{unsatisfied[0].name}" not provided.')
+
+def print_defaults() -> None:
+    '''
+    Prints all flags usage informations.
+    '''
+
+    print(f'Usage of {os.path.basename(sys.argv[0])}:')
+
+    for flag in _flags_registered.values():
+        flag.description()
+
+def parse() -> None:
+    _parse(sys.argv.copy())
