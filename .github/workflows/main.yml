@@ -19,9 +19,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install pylint
         pip install build
+    - name: Analysing the code with pylint
+      run: |
+        pylint ./flag/__init__.py
     - name: Build source code
       run: |
         python -m build
-    - name: Analysing the code with pylint
-      run: |
-        pylint `ls -R|grep .py$|xargs`
