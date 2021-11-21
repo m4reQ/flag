@@ -17,19 +17,18 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pylint
-        pip install build
-        pip install mypy
-        pip install unittest
+        python -m pip install pylint
+        python -m pip install build
+        python -m pip install mypy
     - name: Analyse the code with pylint
       run: |
-        pylint ./src
+        python -m pylint ./src
     - name: Analyse the code with mypy
       run: |
-        mypy ./src
-    - name: Test the code with unittest
-      run: |
-        unittest discover
+        python -m mypy ./src
     - name: Build source code
       run: |
         python -m build
+    - name: Test the code with unittest
+      run: |
+        python -m unittest discover
