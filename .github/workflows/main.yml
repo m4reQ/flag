@@ -29,6 +29,9 @@ jobs:
     - name: Build source code
       run: |
         python -m build
+    - name: Install built package
+        run: |
+          python -m pip install $"./dist/{ls *.whl | head -1}"
     - name: Test the code with unittest
       run: |
         python -m unittest discover
