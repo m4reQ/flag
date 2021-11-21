@@ -22,10 +22,10 @@ jobs:
         python -m pip install mypy
     - name: Analyse the code with pylint
       run: |
-        python -m pylint ./src
+        python -m pylint ./src/flag
     - name: Analyse the code with mypy
       run: |
-        python -m mypy ./src
+        python -m mypy ./src/flag
     - name: Build source code
       run: |
         python -m build

@@ -233,11 +233,6 @@ def _register_flag(flag: _Flag) -> None:
         _unsatisfied_mandatory[flag.name] = flag
 
 def _parse(argv: List[str]) -> None:
-    '''
-    Parses given command line arguments and puts values
-    into corresponding flags.
-    '''
-
     argv.pop(0)
 
     flags_provided = []
@@ -296,4 +291,9 @@ def print_defaults() -> None:
         flag.description()
 
 def parse() -> None:
+    '''
+    Parses given command line arguments and puts values
+    into corresponding flags.
+    '''
+
     _parse(sys.argv.copy())
