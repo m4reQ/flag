@@ -2,3 +2,6 @@ dist/
 .vscode/
 *.egg-info/
 __pycache__/
+.mypy_cache/
+htmlcov/
+.coverage

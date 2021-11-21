@@ -20,12 +20,16 @@ jobs:
         pip install pylint
         pip install build
         pip install mypy
+        pip install unittest
     - name: Analyse the code with pylint
       run: |
         pylint ./src
     - name: Analyse the code with mypy
       run: |
         mypy ./src
+    - name: Test the code with unittest
+      run: |
+        unittest discover
     - name: Build source code
       run: |
         python -m build
